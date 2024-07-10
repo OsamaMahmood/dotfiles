@@ -8,3 +8,4 @@ This is backup repo for dot files making reconfiguration easier later on
 * eza
 * zsh-syntax-highlighting
 * zsh-autosuggestions
+* micro
