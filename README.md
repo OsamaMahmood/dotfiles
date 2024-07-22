@@ -9,3 +9,4 @@ This is backup repo for dot files making reconfiguration easier later on
 * zsh-syntax-highlighting
 * zsh-autosuggestions
 * micro
+* bat
