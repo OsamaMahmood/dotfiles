@@ -122,6 +122,8 @@ alias mobsf='docker run -it --rm --name mobsf -p 8000:8000 -v /Users/osama/Tools
 alias mobsfdyn='docker run -it --rm --name mobsfdyn -p 8000:8000 -p 1337:1337 -e MOBSF_ANALYZER_IDENTIFIER=emulator-5554 opensecurity/mobile-security-framework-mobsf:latest'
 alias ls='eza'
 alias nano='micro'
+alias mobilept='source ~/mobilept/bin/activate'
+alias cat='bat'
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/osama/Downloads/google-cloud-sdk 3/path.zsh.inc' ]; then . '/Users/osama/Downloads/google-cloud-sdk 3/path.zsh.inc'; fi
