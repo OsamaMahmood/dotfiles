@@ -10,3 +10,5 @@ This is backup repo for dot files making reconfiguration easier later on
 * zsh-autosuggestions
 * micro
 * bat
+* zoxide
+* fzf
