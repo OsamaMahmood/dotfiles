@@ -118,12 +118,20 @@ export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 
 
 alias tabby='cd ~/Documents/Tabby-ai'
-alias mobsf='docker run -it --rm --name mobsf -p 8000:8000 -v /Users/osama/Tools/mobsf:/home/mobsf/.MobSF opensecurity/mobile-security-framework-mobsf:latest'
+alias mobsf='docker run -it --rm --name mobsf -p 8000:8000 opensecurity/mobile-security-framework-mobsf:latest'
 alias mobsfdyn='docker run -it --rm --name mobsfdyn -p 8000:8000 -p 1337:1337 -e MOBSF_ANALYZER_IDENTIFIER=emulator-5554 opensecurity/mobile-security-framework-mobsf:latest'
-alias ls='eza'
+alias ls='eza --icons=always'
 alias nano='micro'
 alias mobilept='source ~/mobilept/bin/activate'
 alias cat='bat'
+
+# Elastic Hosts running agents
+alias sshelk1='ssh osama@10.165.16.2'
+alias sshelk2='ssh osama@10.165.16.3'
+alias sshelk3='ssh osama@10.165.16.4'
+alias sshelk4='ssh osama@10.165.16.5'
+# Ciso-1 SSH
+alias sshciso1='gcloud compute ssh --zone "asia-south1-a" "ciso-1" --project "tabbyai" --tunnel-through-iap'
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/osama/Downloads/google-cloud-sdk 3/path.zsh.inc' ]; then . '/Users/osama/Downloads/google-cloud-sdk 3/path.zsh.inc'; fi
@@ -133,3 +141,8 @@ if [ -f '/Users/osama/Downloads/google-cloud-sdk 3/completion.zsh.inc' ]; then .
 
 # the fuck 
 eval $(thefuck --alias fk)
+export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+
+# zoxide better cd
+eval "$(zoxide init --cmd cd zsh)"
