@@ -125,19 +125,8 @@ alias nano='micro'
 alias mobilept='source ~/mobilept/bin/activate'
 alias cat='bat'
 
-# Elastic Hosts running agents
-alias sshelk1='ssh osama@10.165.16.2'
-alias sshelk2='ssh osama@10.165.16.3'
-alias sshelk3='ssh osama@10.165.16.4'
-alias sshelk4='ssh osama@10.165.16.5'
-# Ciso-1 SSH
-alias sshciso1='gcloud compute ssh --zone "asia-south1-a" "ciso-1" --project "tabbyai" --tunnel-through-iap'
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/osama/Downloads/google-cloud-sdk 3/path.zsh.inc' ]; then . '/Users/osama/Downloads/google-cloud-sdk 3/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/osama/Downloads/google-cloud-sdk 3/completion.zsh.inc' ]; then . '/Users/osama/Downloads/google-cloud-sdk 3/completion.zsh.inc'; fi
+# kubectl 
+alias k='kubectl'
 
 # the fuck 
 eval $(thefuck --alias fk)
