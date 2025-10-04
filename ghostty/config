@@ -1,0 +1,7 @@
+clipboard-read = allow
+clipboard-write = allow
+mouse-shift-capture = true
+cursor-click-to-move = true
+theme = catppuccin-mocha.conf
+font-family = "Hack Nerd Font Mono Regular"
+font-size = 13
