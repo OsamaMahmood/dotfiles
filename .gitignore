@@ -1,0 +1,16 @@
+btop/*
+.DS_Store
+*.pem
+*.p12
+*.p8
+*.p12
+*.p8
+*.p12
+*.p8
+*.p12
+*.p8
+gh/*
+gcloud/*
+raycast/*
+frida/*
+wireshark/*
