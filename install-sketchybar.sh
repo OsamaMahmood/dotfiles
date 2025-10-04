@@ -16,9 +16,8 @@ NC='\033[0m' # No Color
 
 # Configuration
 CONFIG_DIR="$HOME/.config/sketchybar"
-FONT_DIR="$HOME/Library/Fonts"
-FONT_URL="https://github.com/kvndrsslr/sketchybar-app-font/releases/download/v2.0.45/sketchybar-app-font.ttf"
-FONT_NAME="sketchybar-app-font.ttf"
+PLUGINS_DIR="$CONFIG_DIR/plugins"
+ICON_MAP_FN="$PLUGINS_DIR/icon_map_fn.sh"
 
 # Helper functions
 print_step() {
@@ -70,23 +69,25 @@ install_dependencies() {
     print_step "Installing fonts..."
     brew install --cask font-hack-nerd-font
     brew install font-sf-pro
-    brew install --cask sf-symbols
+    brew install --cask sf-symbols font-sketchybar-app-font
     
     print_success "Dependencies installed successfully"
 }
 
-install_custom_font() {
-    print_step "Installing SketchyBar App Font..."
-    
-    # Create fonts directory if it doesn't exist
-    mkdir -p "$FONT_DIR"
-    
-    # Download and install the custom font
-    if curl -L "$FONT_URL" -o "$FONT_DIR/$FONT_NAME"; then
-        print_success "SketchyBar App Font installed successfully"
+install_icon_map() {
+    print_step "Fetching latest icon_map.sh..."
+
+    latest_tag=$(curl -fsSL https://api.github.com/repos/kvndrsslr/sketchybar-app-font/releases/latest \
+        | jq -r .tag_name)
+
+    mkdir -p "$PLUGINS_DIR"
+
+    if curl -fsSL "https://github.com/kvndrsslr/sketchybar-app-font/releases/download/${latest_tag}/icon_map.sh" \
+        -o "$ICON_MAP_FN"; then
+        chmod +x "$ICON_MAP_FN"
+        print_success "Downloaded latest icon_map.sh ($latest_tag)"
     else
-        print_error "Failed to download SketchyBar App Font"
-        exit 1
+        print_warning "Failed to download icon_map.sh"
     fi
 }
 
@@ -226,7 +227,7 @@ main() {
     
     # Installation steps
     install_dependencies
-    install_custom_font
+    install_icon_map
     setup_configuration
     setup_permissions
     stop_existing_sketchybar
