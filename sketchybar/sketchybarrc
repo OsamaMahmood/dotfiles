@@ -1,0 +1,85 @@
+#!/bin/bash
+
+source "$CONFIG_DIR/colors.sh" # Loads all defined colors
+
+# SketchyBar Configuration
+
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+ITEM_DIR="$CONFIG_DIR/items"
+
+##### Bar Appearance #####
+# Configuring the general appearance of the bar, these are only some of the
+# options available. For all options see:
+# https://felixkratz.github.io/SketchyBar/config/bar
+# If you are looking for other colors, see the color picker:
+# https://felixkratz.github.io/SketchyBar/config/tricks#color-picker
+
+sketchybar --bar height=32        \
+                 blur_radius=10   \
+                 position=top     \
+                 sticky=on       \
+                 padding_left=8   \
+                 padding_right=8  \
+                 margin=0         \
+                 y_offset=0       \
+                 corner_radius=18 \
+                 color=$BAR_COLOR
+
+##### Changing Defaults #####
+# We now change some default values that are applied to all further items
+# For a full list of all available item properties see:
+# https://felixkratz.github.io/SketchyBar/config/items
+
+sketchybar --default icon.font="SF Pro:Semibold:14.0"  \
+                     icon.color=$WHITE                 \
+                     label.font="SF Pro:Semibold:14.0" \
+                     label.color=$WHITE                \
+                     padding_left=4                    \
+                     padding_right=4                   \
+                     icon.padding_left=4               \
+                     icon.padding_right=2              \
+                     label.padding_left=2              \
+                     label.padding_right=4             \
+                     background.corner_radius=12       \
+                     background.height=22              \
+                     background.color=$ITEM_BG_COLOR   \
+                     background.drawing=off
+
+# -- Left Side Items --
+source $ITEM_DIR/apple_logo.sh
+source $ITEM_DIR/spaces.sh
+source $ITEM_DIR/front_app.sh
+
+# Left section unified background
+sketchybar --add bracket left_pill_bg apple_logo space.1 space.2 space.3 space.4 space.5 space.6 space.7 space.8 space.9 space.10 space_separator front_app \
+           --set left_pill_bg background.color=0xcc1e1e2e \
+                              background.corner_radius=16 \
+                              background.height=28 \
+                              background.padding_left=2 \
+                              background.padding_right=2 \
+                              background.blur_radius=20
+
+
+# -- Right Side Items --
+source $ITEM_DIR/calendar.sh
+source $ITEM_DIR/volume.sh
+source $ITEM_DIR/battery.sh
+source $ITEM_DIR/cpu.sh
+source $ITEM_DIR/memory.sh
+source $ITEM_DIR/music.sh
+
+# Right section unified background
+sketchybar --add bracket right_pill_bg music-next music music-prev calendar volume battery cpu memory \
+           --set right_pill_bg background.color=0xcc1e1e2e \
+                               background.corner_radius=16 \
+                               background.height=28 \
+                               background.padding_left=4 \
+                               background.padding_right=4 \
+                               background.blur_radius=20
+
+
+##### Finalizing Setup #####
+# The below command is only needed at the end of the initial configuration to
+# force all scripts to run the first time, it should never be run in an item script.
+
+sketchybar --update
