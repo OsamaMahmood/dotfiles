@@ -21,7 +21,7 @@ sketchybar --bar height=32        \
                  padding_left=8   \
                  padding_right=8  \
                  margin=0         \
-                 y_offset=0       \
+                 y_offset=8       \
                  corner_radius=18 \
                  color=$BAR_COLOR
 
