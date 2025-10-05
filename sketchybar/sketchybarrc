@@ -14,15 +14,15 @@ ITEM_DIR="$CONFIG_DIR/items"
 # If you are looking for other colors, see the color picker:
 # https://felixkratz.github.io/SketchyBar/config/tricks#color-picker
 
-sketchybar --bar height=32        \
+sketchybar --bar height=42        \
                  blur_radius=10   \
                  position=top     \
                  sticky=on       \
-                 padding_left=8   \
-                 padding_right=8  \
+                 padding_left=10  \
+                 padding_right=10 \
                  margin=0         \
-                 y_offset=8       \
-                 corner_radius=18 \
+                 y_offset=5       \
+                 corner_radius=22 \
                  color=$BAR_COLOR
 
 ##### Changing Defaults #####
@@ -30,18 +30,18 @@ sketchybar --bar height=32        \
 # For a full list of all available item properties see:
 # https://felixkratz.github.io/SketchyBar/config/items
 
-sketchybar --default icon.font="SF Pro:Semibold:14.0"  \
+sketchybar --default icon.font="SF Pro:Semibold:16.0"  \
                      icon.color=$WHITE                 \
-                     label.font="SF Pro:Semibold:14.0" \
+                     label.font="SF Pro:Semibold:16.0" \
                      label.color=$WHITE                \
-                     padding_left=4                    \
-                     padding_right=4                   \
-                     icon.padding_left=4               \
-                     icon.padding_right=2              \
-                     label.padding_left=2              \
-                     label.padding_right=4             \
-                     background.corner_radius=12       \
-                     background.height=22              \
+                     padding_left=6                    \
+                     padding_right=6                   \
+                     icon.padding_left=6               \
+                     icon.padding_right=3              \
+                     label.padding_left=3              \
+                     label.padding_right=6             \
+                     background.corner_radius=15       \
+                     background.height=28              \
                      background.color=$ITEM_BG_COLOR   \
                      background.drawing=off
 
@@ -53,10 +53,10 @@ source $ITEM_DIR/front_app.sh
 # Left section unified background
 sketchybar --add bracket left_pill_bg apple_logo space.1 space.2 space.3 space.4 space.5 space.6 space.7 space.8 space.9 space.10 space_separator front_app \
            --set left_pill_bg background.color=0xcc1e1e2e \
-                              background.corner_radius=16 \
-                              background.height=28 \
-                              background.padding_left=2 \
-                              background.padding_right=2 \
+                              background.corner_radius=20 \
+                              background.height=36 \
+                              background.padding_left=3 \
+                              background.padding_right=3 \
                               background.blur_radius=20
 
 
@@ -71,10 +71,10 @@ source $ITEM_DIR/music.sh
 # Right section unified background
 sketchybar --add bracket right_pill_bg music-next music music-prev calendar volume battery cpu memory \
            --set right_pill_bg background.color=0xcc1e1e2e \
-                               background.corner_radius=16 \
-                               background.height=28 \
-                               background.padding_left=4 \
-                               background.padding_right=4 \
+                               background.corner_radius=20 \
+                               background.height=36 \
+                               background.padding_left=5 \
+                               background.padding_right=5 \
                                background.blur_radius=20
 
 
