@@ -25,16 +25,39 @@ if [ "$SENDER" = "mouse.clicked" ]; then
     9) osascript -e 'tell application "System Events" to key code 25 using control down' ;;
     10) osascript -e 'tell application "System Events" to key code 29 using control down' ;;
   esac
+  exit 0
 fi
 
-# Handle space selection visual updates
-if [ $SELECTED = true ]; then
-  sketchybar --set $NAME background.drawing=on \
-                         background.color=0xff7c7f93 \
-                         label.color=$WHITE \
-                         icon.color=$WHITE
-else
-  sketchybar --set $NAME background.drawing=off \
-                         label.color=$ACCENT_COLOR \
-                         icon.color=$ACCENT_COLOR
+# Handle space selection visual updates first (this runs on space changes)
+if [ "$SENDER" != "mouse.entered" ] && [ "$SENDER" != "mouse.exited" ]; then
+  if [ "$SELECTED" = "true" ]; then
+    sketchybar --set $NAME background.drawing=on \
+                           background.color=0xff7c7f93 \
+                           label.color=$WHITE \
+                           icon.color=$WHITE
+  else
+    sketchybar --set $NAME background.drawing=off \
+                           label.color=$ACCENT_COLOR \
+                           icon.color=$ACCENT_COLOR
+  fi
+fi
+
+# Handle mouse hover effects (only for mouse events)
+if [ "$SENDER" = "mouse.entered" ]; then
+  # Show hover effect only if not already selected
+  if [ "$SELECTED" != "true" ]; then
+    sketchybar --set $NAME background.drawing=on \
+                           background.color=0xaa585b70 \
+                           label.color=$WHITE \
+                           icon.color=$WHITE
+  fi
+fi
+
+if [ "$SENDER" = "mouse.exited" ]; then
+  # Remove hover effect only if not selected
+  if [ "$SELECTED" != "true" ]; then
+    sketchybar --set $NAME background.drawing=off \
+                           label.color=$ACCENT_COLOR \
+                           icon.color=$ACCENT_COLOR
+  fi
 fi

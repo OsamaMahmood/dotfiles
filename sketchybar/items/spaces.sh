@@ -23,7 +23,7 @@ do
                               padding_left=4                \
                               padding_right=4                            \
                               script="$PLUGIN_DIR/space.sh"              \
-             --subscribe space.$sid mouse.clicked
+             --subscribe space.$sid mouse.clicked mouse.entered mouse.exited
 done
 
 sketchybar --add item space_separator left                             \
