@@ -62,6 +62,7 @@ sketchybar --add bracket left_pill_bg apple_logo space.1 space.2 space.3 space.4
 
 # -- Right Side Items --
 source $ITEM_DIR/calendar.sh
+source $ITEM_DIR/clipboard.sh
 source $ITEM_DIR/volume.sh
 source $ITEM_DIR/battery.sh
 source $ITEM_DIR/cpu.sh
@@ -69,7 +70,7 @@ source $ITEM_DIR/memory.sh
 source $ITEM_DIR/music.sh
 
 # Right section unified background
-sketchybar --add bracket right_pill_bg music-next music music-prev calendar volume battery cpu memory \
+sketchybar --add bracket right_pill_bg music-next music music-prev calendar clipboard volume battery cpu memory \
            --set right_pill_bg background.color=0xcc1e1e2e \
                                background.corner_radius=20 \
                                background.height=36 \
