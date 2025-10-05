@@ -138,6 +138,36 @@ The installer script will automatically:
    brew services start sketchybar
    ```
 
+### Troubleshooting
+
+#### Space Switching Not Working
+
+If clicking on spaces in SketchyBar doesn't switch desktops, you need to enable keyboard shortcuts:
+
+1. Go to **System Settings** → **Keyboard** → **Keyboard Shortcuts**
+2. Select **Mission Control** from the sidebar
+3. Enable the space switching shortcuts (^1, ^2, ^3, etc.)
+
+![Mission Control Keyboard Shortcuts](images/mission-control-keyboard.png)
+
+**Required Settings:**
+
+- ✅ **Mission Control** - enabled
+- ✅ **Switch to Desktop 1** - ^1
+- ✅ **Switch to Desktop 2** - ^2
+- ✅ **Switch to Desktop 3** - ^3
+- ✅ **Switch to Desktop 4** - ^4
+- ✅ **Switch to Desktop 5** - ^5
+- ✅ **Switch to Desktop 6** - ^6
+- ✅ **Switch to Desktop 7** - ^7
+- ✅ **Switch to Desktop 8** - ^8
+
+#### Other Common Issues
+
+- **SketchyBar not visible**: Ensure "Displays have separate Spaces" is enabled in Desktop & Dock settings
+- **Music controls not working**: Install YouTube Music Desktop and enable API (port 26538)
+- **Icons not displaying**: Verify SketchyBar App Font is installed in ~/Library/Fonts/
+
 ### Configuration Reference
 
 This setup follows the [official SketchyBar documentation](https://felixkratz.github.io/SketchyBar/config/bar) with custom optimizations for:
@@ -247,11 +277,15 @@ micro/
 
    ```bash
    # Core tools
-   brew install sketchybar micro
+   brew install sketchybar jq curl micro
 
    # Terminal emulators
    brew install --cask warp
    # Install Ghostty from official website
+
+   # Fonts
+   brew tap homebrew/cask-fonts
+   brew install --cask font-hack-nerd-font font-sf-pro sf-symbols
    ```
 
 3. **Link configurations**:
