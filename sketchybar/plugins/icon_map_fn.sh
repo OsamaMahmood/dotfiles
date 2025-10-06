@@ -167,9 +167,6 @@ function icon_map() {
    "Caprine")
         icon_result=":caprine:"
         ;;
-   "ChatGPT")
-        icon_result=":chat_gpt:"
-        ;;
    "Amazon Chime")
         icon_result=":chime:"
         ;;
@@ -223,6 +220,12 @@ function icon_map() {
         ;;
    "Cypress")
         icon_result=":cypress:"
+        ;;
+   "Maccy")
+        icon_result=":maccy_clip:"
+        ;;
+   "Twingate")
+        icon_result=":twingate:"
         ;;
    "Dash")
         icon_result=":dash:"
