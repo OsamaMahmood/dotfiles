@@ -34,12 +34,12 @@ sketchybar --default icon.font="SF Pro:Semibold:16.0"  \
                      icon.color=$WHITE                 \
                      label.font="SF Pro:Semibold:16.0" \
                      label.color=$WHITE                \
-                     padding_left=6                    \
-                     padding_right=6                   \
+                     padding_left=3                    \
+                     padding_right=3                   \
                      icon.padding_left=6               \
                      icon.padding_right=3              \
-                     label.padding_left=3              \
-                     label.padding_right=6             \
+                     label.padding_left=6              \
+                     label.padding_right=3             \
                      background.corner_radius=15       \
                      background.height=28              \
                      background.color=$ITEM_BG_COLOR   \
@@ -62,20 +62,21 @@ sketchybar --add bracket left_pill_bg apple_logo space.1 space.2 space.3 space.4
 
 # -- Right Side Items --
 source $ITEM_DIR/calendar.sh
-source $ITEM_DIR/clipboard.sh
 source $ITEM_DIR/volume.sh
 source $ITEM_DIR/battery.sh
 source $ITEM_DIR/cpu.sh
 source $ITEM_DIR/memory.sh
+source $ITEM_DIR/clipboard.sh
+source $ITEM_DIR/twingate.sh
 source $ITEM_DIR/music.sh
 
 # Right section unified background
-sketchybar --add bracket right_pill_bg music-next music music-prev calendar clipboard volume battery cpu memory \
+sketchybar --add bracket right_pill_bg music-next music music-prev calendar volume battery cpu memory clipboard twingate \
            --set right_pill_bg background.color=0xcc1e1e2e \
                                background.corner_radius=20 \
                                background.height=36 \
-                               background.padding_left=5 \
-                               background.padding_right=5 \
+                               background.padding_left=3 \
+                               background.padding_right=3 \
                                background.blur_radius=20
 
 
