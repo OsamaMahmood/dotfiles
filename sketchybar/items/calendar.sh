@@ -6,4 +6,5 @@ sketchybar --add item calendar right \
                           padding_left=4 \
                           padding_right=2 \
                           background.drawing=on \
-                          script="$PLUGIN_DIR/calendar.sh"
+                          script="$PLUGIN_DIR/calendar.sh" \
+                          click_script="$PLUGIN_DIR/calendar.sh click"
