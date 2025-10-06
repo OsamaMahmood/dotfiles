@@ -12,8 +12,8 @@ source "$HELPER_PATH" 2>/dev/null || {
   exit 1
 }
 
-# Create music control buttons using helper functions
-create_music_button "music-next" "􀊋" "curl -s --max-time 0.5 -X POST 0.0.0.0:26538/api/v1/next >/dev/null 2>&1 && $PLUGIN_DIR/youtube-music.sh skip-status-check"
+# Create music control buttons using helper functions and unified script
+create_music_button "music-next" "􀊋" "$PLUGIN_DIR/youtube-music.sh next"
 
 # Main music display with standardized update frequency
 sketchybar --add item music right \
@@ -24,7 +24,7 @@ sketchybar --add item music right \
                        label.max_chars=15 \
                        scroll_texts=on \
                        background.drawing=on \
-                       script="$PLUGIN_DIR/youtube-music.sh" \
-                       click_script="$PLUGIN_DIR/youtube-music-click-handler.sh"
+                       script="$PLUGIN_DIR/youtube-music.sh display" \
+                       click_script="$PLUGIN_DIR/youtube-music.sh click"
 
-create_music_button "music-prev" "􀊉" "curl -s --max-time 0.5 -X POST 0.0.0.0:26538/api/v1/previous >/dev/null 2>&1 && $PLUGIN_DIR/youtube-music.sh skip-status-check"
+create_music_button "music-prev" "􀊉" "$PLUGIN_DIR/youtube-music.sh previous"
