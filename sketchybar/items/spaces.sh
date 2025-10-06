@@ -20,8 +20,8 @@ do
                               background.border_width=0                  \
                               background.padding_left=0                  \
                               background.padding_right=0                 \
-                              padding_left=5                \
-                              padding_right=5                            \
+                              padding_left=3                \
+                              padding_right=3                            \
                               script="$PLUGIN_DIR/space.sh"              \
              --subscribe space.$sid mouse.clicked mouse.entered mouse.exited
 done
