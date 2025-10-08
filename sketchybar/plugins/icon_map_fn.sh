@@ -213,9 +213,6 @@ function icon_map() {
    "Creative Cloud")
         icon_result=":creative_cloud:"
         ;;
-   "Cursor")
-        icon_result=":cursor:"
-        ;;
    "Cursor"*)
         icon_result=":cursor_ide:"
         ;;
