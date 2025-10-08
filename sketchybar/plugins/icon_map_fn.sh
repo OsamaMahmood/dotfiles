@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-function icon_map() {
+### START-OF-ICON-MAP
+function __icon_map() {
     case "$1" in
    "Live")
         icon_result=":ableton:"
@@ -53,9 +54,6 @@ function icon_map() {
    "AltTab")
         icon_result=":alttab:"
         ;;
-   "AmneziaVPN")
-        icon_result=":amnezia_vpn:"
-        ;;
    "Android Messages")
         icon_result=":android_messages:"
         ;;
@@ -70,9 +68,6 @@ function icon_map() {
         ;;
    "Apifox")
         icon_result=":apifox:"
-        ;;
-   "AppCleaner")
-        icon_result=":app_cleaner:"
         ;;
    "App Eraser")
         icon_result=":app_eraser:"
@@ -146,9 +141,6 @@ function icon_map() {
    "Bruno")
         icon_result=":bruno:"
         ;;
-   "Burp Suite"*)
-        icon_result=":burp_suite:"
-        ;;
    "BusyCal")
         icon_result=":busycal:"
         ;;
@@ -215,17 +207,11 @@ function icon_map() {
    "Creative Cloud")
         icon_result=":creative_cloud:"
         ;;
-   "Cursor"*)
-        icon_result=":cursor_ide:"
+   "Cursor")
+        icon_result=":cursor:"
         ;;
    "Cypress")
         icon_result=":cypress:"
-        ;;
-   "Maccy")
-        icon_result=":maccy_clip:"
-        ;;
-   "Twingate")
-        icon_result=":twingate:"
         ;;
    "Dash")
         icon_result=":dash:"
@@ -340,9 +326,6 @@ function icon_map() {
         ;;
    "Fork")
         icon_result=":fork:"
-        ;;
-   "ForkLift")
-        icon_result=":forklift:"
         ;;
    "Foxit PDF Reader")
         icon_result=":foxit_reader:"
@@ -1141,7 +1124,4 @@ function icon_map() {
         ;;
     esac
 }
-
-icon_map "$1"
-
-echo "$icon_result"
+### END-OF-ICON-MAP
