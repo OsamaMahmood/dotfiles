@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 ### START-OF-ICON-MAP
-function __icon_map() {
-    case "$1" in
+function icon_map() {
+  case "$1" in
    "Live")
         icon_result=":ableton:"
         ;;
@@ -53,6 +53,9 @@ function __icon_map() {
         ;;
    "AltTab")
         icon_result=":alttab:"
+        ;;
+   "AmneziaVPN")
+        icon_result=":amnezia_vpn:"
         ;;
    "Android Messages")
         icon_result=":android_messages:"
@@ -141,6 +144,9 @@ function __icon_map() {
    "Bruno")
         icon_result=":bruno:"
         ;;
+   "Burp Suite"*)
+        icon_result=":burp_suite:"
+        ;;
    "BusyCal")
         icon_result=":busycal:"
         ;;
@@ -209,6 +215,9 @@ function __icon_map() {
         ;;
    "Cursor")
         icon_result=":cursor:"
+        ;;
+   "Cursor"*)
+        icon_result=":cursor_ide:"
         ;;
    "Cypress")
         icon_result=":cypress:"
@@ -326,6 +335,9 @@ function __icon_map() {
         ;;
    "Fork")
         icon_result=":fork:"
+        ;;
+   "ForkLift")
+        icon_result=":forklift:"
         ;;
    "Foxit PDF Reader")
         icon_result=":foxit_reader:"
@@ -527,6 +539,9 @@ function __icon_map() {
         ;;
    "Logseq")
         icon_result=":logseq:"
+        ;;
+   "Maccy")
+        icon_result=":maccy_clip:"
         ;;
    "MacPass")
         icon_result=":macpass:"
@@ -1020,6 +1035,9 @@ function __icon_map() {
    "TV")
         icon_result=":tv:"
         ;;
+   "Twingate")
+        icon_result=":twingate:"
+        ;;
    "Tweetbot" | "Twitter")
         icon_result=":twitter:"
         ;;
@@ -1124,4 +1142,6 @@ function __icon_map() {
         ;;
     esac
 }
-### END-OF-ICON-MAP
+
+icon_map "$1"
+echo "$icon_result"
