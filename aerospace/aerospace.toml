@@ -1,0 +1,139 @@
+# ── Startup ───────────────────────────────────────────────────────────────────
+
+after-startup-command = ['exec-and-forget sketchybar']
+start-at-login       = true
+
+exec-on-workspace-change = [
+    '/bin/bash', '-c',
+    'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE',
+]
+
+# ── General ───────────────────────────────────────────────────────────────────
+
+enable-normalization-flatten-containers                 = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+automatically-unhide-macos-hidden-apps                  = false
+on-focused-monitor-changed                              = ['move-mouse monitor-lazy-center']
+
+default-root-container-layout      = 'tiles'
+default-root-container-orientation = 'auto'
+accordion-padding                  = 300
+
+# ── Key mapping ───────────────────────────────────────────────────────────────
+
+[key-mapping]
+preset = 'qwerty'
+
+# ── Gaps ──────────────────────────────────────────────────────────────────────
+
+[gaps]
+inner.horizontal = 10
+inner.vertical   = 10
+outer.left       = 10
+outer.bottom     = 10
+outer.top        = [{ monitor.'^Built-in.*$' = 10 }, 48]
+outer.right      = 10
+
+# ── Floating window rules ─────────────────────────────────────────────────────
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'shottr'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'finder'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'quicktime'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'appclean'
+run = 'layout floating'
+
+# ── Main keybindings ──────────────────────────────────────────────────────────
+
+[mode.main.binding]
+
+# Layout
+alt-ctrl-shift-f = 'fullscreen'
+alt-ctrl-f       = 'layout floating tiling'
+alt-slash        = 'layout tiles horizontal vertical'
+alt-comma        = 'layout accordion horizontal vertical'
+
+# Focus (vim-style)
+alt-h = 'focus left'
+alt-j = 'focus down'
+alt-k = 'focus up'
+alt-l = 'focus right'
+
+# Move window
+alt-shift-h = 'move left'
+alt-shift-j = 'move down'
+alt-shift-k = 'move up'
+alt-shift-l = 'move right'
+
+# Resize
+alt-shift-minus = 'resize smart -50'
+alt-shift-equal = 'resize smart +50'
+
+# Workspaces
+alt-1 = 'workspace 1'
+alt-2 = 'workspace 2'
+alt-3 = 'workspace 3'
+alt-4 = 'workspace 4'
+alt-5 = 'workspace 5'
+alt-6 = 'workspace 6'
+alt-7 = 'workspace 7'
+alt-8 = 'workspace 8'
+alt-9 = 'workspace 9'
+
+# Move window to workspace
+# Tip: add --focus-follows-window to also switch to that workspace
+alt-shift-1 = 'move-node-to-workspace 1'
+alt-shift-2 = 'move-node-to-workspace 2'
+alt-shift-3 = 'move-node-to-workspace 3'
+alt-shift-4 = 'move-node-to-workspace 4'
+alt-shift-5 = 'move-node-to-workspace 5'
+alt-shift-6 = 'move-node-to-workspace 6'
+alt-shift-7 = 'move-node-to-workspace 7'
+alt-shift-8 = 'move-node-to-workspace 8'
+alt-shift-9 = 'move-node-to-workspace 9'
+
+alt-tab       = 'workspace-back-and-forth'
+alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
+
+# Modes
+alt-shift-semicolon = 'mode service'
+alt-shift-enter     = 'mode apps'
+
+# Quick launch
+alt-s = 'exec-and-forget open -a /Applications/Slack.app'
+alt-q = 'exec-and-forget open -a "/System/Applications/QuickTime Player.app"'
+alt-g = 'exec-and-forget open -a /Applications/Ghostty.app'
+alt-f = 'exec-and-forget open -a /System/Library/CoreServices/Finder.app'
+
+# ── Service mode ──────────────────────────────────────────────────────────────
+
+[mode.service.binding]
+esc         = ['reload-config', 'mode main']
+r           = ['flatten-workspace-tree', 'mode main']
+f           = ['layout floating tiling', 'mode main']
+backspace   = ['close-all-windows-but-current', 'mode main']
+alt-shift-h = ['join-with left', 'mode main']
+alt-shift-j = ['join-with down', 'mode main']
+alt-shift-k = ['join-with up', 'mode main']
+alt-shift-l = ['join-with right', 'mode main']
+
+# ── Apps mode ─────────────────────────────────────────────────────────────────
+
+[mode.apps.binding]
+alt-g = ['exec-and-forget open -a /Applications/Ghostty.app', 'mode main']
+
+# ── Monitor assignments ───────────────────────────────────────────────────────
+
+[workspace-to-monitor-force-assignment]
+1 = '^Built-in.*$'
+2 = '^DELL U.*$'
+3 = '^DELL S.*$'

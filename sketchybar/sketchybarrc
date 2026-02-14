@@ -46,12 +46,13 @@ sketchybar --default icon.font="SF Pro:Semibold:16.0"  \
                      background.drawing=off
 
 # -- Left Side Items --
+sketchybar --add event aerospace_workspace_change
 source $ITEM_DIR/apple_logo.sh
 source $ITEM_DIR/spaces.sh
 source $ITEM_DIR/front_app.sh
 
 # Left section unified background
-sketchybar --add bracket left_pill_bg apple_logo space.1 space.2 space.3 space.4 space.5 space.6 space.7 space.8 space.9 space.10 space_separator front_app \
+sketchybar --add bracket left_pill_bg apple_logo space.1 space.2 space.3 space.4 space.5 space.6 space.7 space.8 space.9 space_separator front_app \
            --set left_pill_bg background.color=0xcc1e1e2e \
                               background.corner_radius=20 \
                               background.height=36 \
