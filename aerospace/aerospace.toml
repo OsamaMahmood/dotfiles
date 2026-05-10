@@ -135,5 +135,11 @@ alt-g = ['exec-and-forget open -a /Applications/Ghostty.app', 'mode main']
 
 [workspace-to-monitor-force-assignment]
 1 = '^Built-in.*$'
-2 = '^DELL U.*$'
-3 = '^DELL S.*$'
+2 = '^(?!Built-in).*$'
+3 = '^(?!Built-in).*$'
+4 = '^(?!Built-in).*$'
+5 = '^(?!Built-in).*$'
+6 = '^(?!Built-in).*$'
+7 = '^(?!Built-in).*$'
+8 = '^(?!Built-in).*$'
+9 = '^(?!Built-in).*$'
