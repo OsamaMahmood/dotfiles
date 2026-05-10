@@ -42,7 +42,7 @@ BREW_FORMULAE=(
 )
 
 BREW_CASKS=(
-    aerospace
+    nikitabobko/tap/aerospace
     raycast
     ngrok
     google-cloud-sdk
@@ -106,7 +106,7 @@ check_xcode_tools() {
 }
 
 add_taps() {
-    local taps=(FelixKratz/formulae)
+    local taps=(FelixKratz/formulae nikitabobko/tap)
     for tap in "${taps[@]}"; do
         if brew tap | grep -qx "$tap"; then
             continue
@@ -129,13 +129,36 @@ install_formula() {
 
 install_cask() {
     local pkg="$1"
-    if brew list --cask "$pkg" &>/dev/null; then
-        print_step "$pkg already installed"
-    else
-        print_step "Installing cask: $pkg..."
-        brew install --cask "$pkg" && print_success "$pkg installed" \
-            || print_warning "Failed to install $pkg"
+    # Strip tap prefix when checking if installed (brew list takes the short name)
+    local short="${pkg##*/}"
+    if brew list --cask "$short" &>/dev/null; then
+        print_step "$short already installed"
+        return
     fi
+
+    print_step "Installing cask: $pkg..."
+    local log; log="$(mktemp)"
+    if brew install --cask "$pkg" 2>&1 | tee "$log"; then
+        if grep -q "successfully installed" "$log" 2>/dev/null \
+                || brew list --cask "$short" &>/dev/null; then
+            print_success "$pkg installed"
+            rm -f "$log"
+            return
+        fi
+    fi
+
+    # Workaround for Homebrew API bug: "undefined method 'to_sym' for nil"
+    if grep -q "to_sym" "$log" 2>/dev/null; then
+        print_warning "Hit Homebrew API bug, retrying with HOMEBREW_NO_INSTALL_FROM_API=1..."
+        if HOMEBREW_NO_INSTALL_FROM_API=1 brew install --cask "$pkg"; then
+            print_success "$pkg installed (via no-API fallback)"
+            rm -f "$log"
+            return
+        fi
+    fi
+
+    print_warning "Failed to install $pkg"
+    rm -f "$log"
 }
 
 install_brew_packages() {
@@ -240,8 +263,11 @@ run_sketchybar_installer() {
         return
     fi
     print_step "Running SketchyBar installer..."
+    # Note: install-sketchybar.sh uses `read -n 1` which consumes a single byte
+    # per prompt. Piping plain `yes` would feed `y\ny\n…` and the second read
+    # would land on `\n` (empty). Strip newlines so every read sees `y`.
     if [[ $ASSUME_YES -eq 1 ]]; then
-        yes | "$sb" || print_warning "SketchyBar installer reported errors"
+        yes | tr -d '\n' | "$sb" || print_warning "SketchyBar installer reported errors"
     else
         "$sb" || print_warning "SketchyBar installer reported errors"
     fi
