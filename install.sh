@@ -105,17 +105,6 @@ check_xcode_tools() {
     print_success "Xcode command line tools present"
 }
 
-add_taps() {
-    local taps=(FelixKratz/formulae nikitabobko/tap)
-    for tap in "${taps[@]}"; do
-        if brew tap | grep -qx "$tap"; then
-            continue
-        fi
-        print_step "Adding tap: $tap"
-        brew tap "$tap" || print_warning "Failed to add tap $tap"
-    done
-}
-
 install_formula() {
     local pkg="$1"
     if brew list --formula "$pkg" &>/dev/null; then
@@ -369,7 +358,6 @@ main() {
     check_xcode_tools
     confirm
 
-    add_taps
     install_brew_packages
     sync_configs
     run_sketchybar_installer
