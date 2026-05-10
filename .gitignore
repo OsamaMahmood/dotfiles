@@ -1,17 +1,32 @@
-btop/*
+# macOS
 .DS_Store
+
+# Secrets / certs
 *.pem
 *.p12
 *.p8
-*.p12
-*.p8
-*.p12
-*.p8
-*.p12
-*.p8
+*.key
+*.crt
+
+# Tool state / caches / runtime data (not config)
+btop/*
 gh/*
 gcloud/*
 raycast/*
 frida/*
 wireshark/*
 zed/*
+containers
+ngrok/
+mole/
+
+# Editor state
+micro/backups/
+micro/buffers/
+
+# Node / package manager artefacts
+**/node_modules/
+opencode/
+
+# Logs
+*.log
