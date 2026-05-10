@@ -154,11 +154,35 @@ install_brew_packages() {
 
 start_aerospace() {
     if [[ $SKIP_CASKS -eq 1 ]]; then return; fi
+
     if pgrep -xq AeroSpace; then
-        print_step "AeroSpace already running"
+        print_step "AeroSpace already running, reloading config..."
     else
         print_step "Launching AeroSpace..."
-        open -a AeroSpace 2>/dev/null || print_warning "Could not auto-launch AeroSpace"
+        open -a AeroSpace 2>/dev/null || {
+            print_warning "Could not auto-launch AeroSpace"
+            return
+        }
+    fi
+
+    # Wait for it to come up, then reload the config from this repo
+    local tries=0
+    until pgrep -xq AeroSpace || [[ $tries -ge 10 ]]; do
+        sleep 1
+        ((tries++))
+    done
+
+    if ! pgrep -xq AeroSpace; then
+        print_warning "AeroSpace did not start within 10s — check Accessibility permissions"
+        return
+    fi
+
+    if command -v aerospace &>/dev/null; then
+        aerospace reload-config 2>/dev/null \
+            && print_success "AeroSpace running, config reloaded" \
+            || print_warning "AeroSpace running but reload-config failed (config may have errors)"
+    else
+        print_success "AeroSpace running"
     fi
 }
 
@@ -173,12 +197,61 @@ run_sketchybar_installer() {
         return
     fi
     print_step "Running SketchyBar installer..."
-    # The sketchybar script has its own prompts; pipe yes if non-interactive
     if [[ $ASSUME_YES -eq 1 ]]; then
         yes | "$sb" || print_warning "SketchyBar installer reported errors"
     else
         "$sb" || print_warning "SketchyBar installer reported errors"
     fi
+
+    # Force a reload so any local edits to sketchybarrc are picked up
+    if command -v sketchybar &>/dev/null && pgrep -xq sketchybar; then
+        sketchybar --reload 2>/dev/null \
+            && print_success "SketchyBar reloaded" \
+            || print_warning "sketchybar --reload failed"
+    fi
+}
+
+verify_runtime() {
+    echo
+    print_step "Verifying tools are loaded..."
+    local failed=0
+
+    # CLI tools — just check they're on PATH
+    local clis=(jq btop micro gh)
+    for cli in "${clis[@]}"; do
+        if command -v "$cli" &>/dev/null; then
+            print_success "$cli on PATH ($(command -v $cli))"
+        else
+            print_error "$cli not found on PATH"
+            ((failed++))
+        fi
+    done
+
+    # SketchyBar — must be a running process
+    if [[ $SKIP_SKETCHYBAR -eq 0 ]]; then
+        if pgrep -xq sketchybar; then
+            print_success "sketchybar process running"
+        else
+            print_error "sketchybar is NOT running"
+            ((failed++))
+        fi
+    fi
+
+    # AeroSpace — must be a running process
+    if [[ $SKIP_CASKS -eq 0 ]]; then
+        if pgrep -xq AeroSpace; then
+            print_success "AeroSpace process running"
+        else
+            print_error "AeroSpace is NOT running"
+            ((failed++))
+        fi
+    fi
+
+    if [[ $failed -gt 0 ]]; then
+        print_warning "$failed verification check(s) failed — see messages above"
+        return 1
+    fi
+    print_success "All verification checks passed"
 }
 
 confirm() {
@@ -224,6 +297,7 @@ main() {
     install_brew_packages
     run_sketchybar_installer
     start_aerospace
+    verify_runtime || true
 
     post_install_notes
 }
