@@ -21,9 +21,16 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TARGET_CONFIG="$HOME/.config"
 SKIP_CASKS=0
 SKIP_SKETCHYBAR=0
 ASSUME_YES=0
+
+# Configs to copy from this repo into ~/.config when the repo is cloned
+# somewhere other than ~/.config itself. Sketchybar is intentionally excluded
+# — install-sketchybar.sh handles its own copy.
+SYNC_DIRS=(aerospace git)
+SYNC_FILES=(micro/bindings.json)
 
 # Tool inventory — keep in sync with the configs that live in this repo.
 BREW_FORMULAE=(
@@ -152,6 +159,42 @@ install_brew_packages() {
     done
 }
 
+sync_configs() {
+    if [[ "$SCRIPT_DIR" == "$TARGET_CONFIG" ]]; then
+        print_step "Repo is already at $TARGET_CONFIG — no sync needed"
+        return
+    fi
+
+    print_step "Copying configs from $SCRIPT_DIR → $TARGET_CONFIG"
+    mkdir -p "$TARGET_CONFIG"
+    local stamp
+    stamp="$(date +%Y%m%d_%H%M%S)"
+
+    for item in "${SYNC_DIRS[@]}"; do
+        local src="$SCRIPT_DIR/$item"
+        local dst="$TARGET_CONFIG/$item"
+        [[ -d "$src" ]] || continue
+        if [[ -e "$dst" ]]; then
+            local backup="${dst}.backup.${stamp}"
+            mv "$dst" "$backup"
+            print_warning "Backed up existing $item → $(basename "$backup")"
+        fi
+        cp -R "$src" "$dst" && print_success "Copied $item/"
+    done
+
+    for rel in "${SYNC_FILES[@]}"; do
+        local src="$SCRIPT_DIR/$rel"
+        local dst="$TARGET_CONFIG/$rel"
+        [[ -f "$src" ]] || continue
+        mkdir -p "$(dirname "$dst")"
+        if [[ -e "$dst" ]]; then
+            cp "$dst" "${dst}.backup.${stamp}"
+            print_warning "Backed up existing $rel"
+        fi
+        cp "$src" "$dst" && print_success "Copied $rel"
+    done
+}
+
 start_aerospace() {
     if [[ $SKIP_CASKS -eq 1 ]]; then return; fi
 
@@ -262,6 +305,9 @@ confirm() {
     echo "  fonts:    ${BREW_FONTS[*]}"
     [[ $SKIP_CASKS -eq 0 ]] && echo "  casks:    ${BREW_CASKS[*]}"
     [[ $SKIP_SKETCHYBAR -eq 0 ]] && echo "  + SketchyBar (via install-sketchybar.sh)"
+    if [[ "$SCRIPT_DIR" != "$TARGET_CONFIG" ]]; then
+        echo "  + copy configs to $TARGET_CONFIG: ${SYNC_DIRS[*]} ${SYNC_FILES[*]}"
+    fi
     echo
     read -p "Continue? (Y/n): " -n 1 -r reply
     echo
@@ -295,6 +341,7 @@ main() {
 
     add_taps
     install_brew_packages
+    sync_configs
     run_sketchybar_installer
     start_aerospace
     verify_runtime || true
