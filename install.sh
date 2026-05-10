@@ -93,16 +93,6 @@ check_homebrew() {
     print_success "Homebrew $(brew --version | head -n1 | awk '{print $2}')"
 }
 
-check_xcode_tools() {
-    if ! xcode-select -p &>/dev/null; then
-        print_warning "Xcode CLT not found, triggering installer"
-        xcode-select --install 2>/dev/null || true
-        print_step "Re-run this script once Xcode CLT finishes installing"
-        exit 0
-    fi
-    print_success "Xcode command line tools present"
-}
-
 install_formula() {
     local pkg="$1"
     if brew list --formula "$pkg" &>/dev/null; then
@@ -353,7 +343,6 @@ main() {
 
     check_macos
     check_homebrew
-    check_xcode_tools
     confirm
 
     install_brew_packages
