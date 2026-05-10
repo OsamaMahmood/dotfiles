@@ -311,7 +311,11 @@ confirm() {
     echo
     read -p "Continue? (Y/n): " -n 1 -r reply
     echo
-    [[ $reply =~ ^[Nn]$ ]] && { print_step "Cancelled"; exit 0; }
+    if [[ $reply =~ ^[Nn]$ ]]; then
+        print_step "Cancelled"
+        exit 0
+    fi
+    return 0
 }
 
 post_install_notes() {
