@@ -91,8 +91,6 @@ check_homebrew() {
         exit 1
     fi
     print_success "Homebrew $(brew --version | head -n1 | awk '{print $2}')"
-    print_step "Updating Homebrew..."
-    brew update >/dev/null 2>&1 || print_warning "brew update failed, continuing"
 }
 
 check_xcode_tools() {
