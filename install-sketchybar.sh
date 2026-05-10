@@ -21,9 +21,15 @@ PLUGINS_DIR="$CONFIG_DIR/plugins"
 ITEMS_DIR="$CONFIG_DIR/items"
 ICON_MAP_FN="$PLUGINS_DIR/icon_map_fn.sh"
 
-# Font URLs and information
+# Pinned fallback URL for the sketchybar-app-font (used if the GitHub API
+# release lookup in install_icon_map fails). install_sketchybar_font fetches
+# this URL directly.
 SKETCHYBAR_APP_FONT_URL="https://github.com/kvndrsslr/sketchybar-app-font/releases/download/v2.0.25/sketchybar-app-font.ttf"
-SF_PRO_FONT_URL="https://developer.apple.com/design/downloads/SF-Pro.dmg"
+
+# Track whether install reached the validated-and-running state. cleanup()
+# only kills sketchybar on failure if we never got there — otherwise a
+# post-install validation warning would tear down a working install.
+INSTALL_COMPLETE=0
 
 # Helper functions
 print_step() {
@@ -78,71 +84,34 @@ check_homebrew() {
         print_error "Visit: https://brew.sh"
         exit 1
     fi
-    
+
     local brew_version=$(brew --version | head -n1)
     print_success "Homebrew found: $brew_version"
-    
-    # Update Homebrew
-    print_step "Updating Homebrew..."
-    if brew update; then
-        print_success "Homebrew updated successfully"
-    else
-        print_warning "Failed to update Homebrew, continuing anyway..."
-    fi
-}
-
-check_xcode_tools() {
-    print_step "Checking for Xcode command line tools..."
-    if ! xcode-select -p &> /dev/null; then
-        print_warning "Xcode command line tools not found"
-        print_step "Installing Xcode command line tools..."
-        
-        # Trigger installation
-        if xcode-select --install 2>/dev/null; then
-            print_step "Xcode command line tools installation started"
-            print_step "Please complete the installation and run this script again"
-            exit 0
-        else
-            print_warning "Xcode command line tools may already be installed or installation failed"
-        fi
-    else
-        print_success "Xcode command line tools found"
-    fi
 }
 
 install_dependencies() {
     print_step "Installing SketchyBar dependencies..."
-    
-    # Add required taps
-    print_step "Adding Homebrew taps..."
-    
-    local taps=("homebrew/cask-fonts" "FelixKratz/formulae")
-    for tap in "${taps[@]}"; do
-        if brew tap "$tap" 2>/dev/null; then
-            print_success "Added tap: $tap"
-        else
-            print_warning "Tap already exists or failed to add: $tap"
-        fi
-    done
-    
-    # Install core dependencies
+
+    # sketchybar lives in FelixKratz/formulae. brew auto-taps when given a
+    # qualified name, so no explicit `brew tap` step is needed.
     print_step "Installing core packages..."
-    local packages=("sketchybar" "jq" "curl")
-    
+    local packages=("FelixKratz/formulae/sketchybar" "jq" "curl")
+
     for package in "${packages[@]}"; do
-        if brew list "$package" &>/dev/null; then
-            print_step "$package already installed"
+        local short="${package##*/}"
+        if brew list --formula "$short" &>/dev/null; then
+            print_step "$short already installed"
         else
-            print_step "Installing $package..."
+            print_step "Installing $short..."
             if brew install "$package"; then
-                print_success "$package installed successfully"
+                print_success "$short installed successfully"
             else
-                print_error "Failed to install $package"
+                print_error "Failed to install $short"
                 exit 1
             fi
         fi
     done
-    
+
     print_success "Core dependencies installed successfully"
 }
 
@@ -161,12 +130,12 @@ install_fonts() {
         fi
     fi
 
-    # Install SF Pro (system font)
-    if brew list font-sf-pro &>/dev/null; then
+    # Install SF Pro (system font) — it's a cask, not a formula
+    if brew list --cask font-sf-pro &>/dev/null; then
         print_step "font-sf-pro already installed"
     else
         print_step "Installing SF Pro Font..."
-        if brew install font-sf-pro 2>/dev/null; then
+        if brew install --cask font-sf-pro; then
             print_success "SF Pro Font installed successfully"
         else
             print_warning "Failed to install SF Pro Font via Homebrew"
@@ -367,16 +336,16 @@ setup_permissions() {
 
 stop_existing_sketchybar() {
     print_step "Stopping any existing SketchyBar instances..."
-    
-    # Stop brew service if running
+
     if brew services stop sketchybar 2>/dev/null; then
         print_success "SketchyBar service stopped"
     else
         print_step "SketchyBar service was not running"
     fi
-    
-    # Kill any running SketchyBar processes
-    if pkill -f sketchybar 2>/dev/null; then
+
+    # Kill the daemon by exact process name. Avoid `-f` (full command line)
+    # which would also match any plugin script with sketchybar in its path.
+    if pkill -x sketchybar 2>/dev/null; then
         print_success "Stopped running SketchyBar processes"
         sleep 2
     else
@@ -397,22 +366,19 @@ start_sketchybar() {
     if brew services start sketchybar; then
         print_success "SketchyBar service started successfully"
         sleep 3
-        
-        # Verify it's running
-        if pgrep -f sketchybar > /dev/null; then
+
+        if pgrep -xq sketchybar; then
             print_success "SketchyBar is running"
         else
             print_warning "SketchyBar service started but process not found"
         fi
     else
         print_warning "Failed to start SketchyBar service, trying manual start..."
-        
-        # Try manual start
+
         sketchybar --config "$CONFIG_DIR/sketchybarrc" &
-        local sketchybar_pid=$!
         sleep 2
-        
-        if pgrep -f sketchybar > /dev/null; then
+
+        if pgrep -xq sketchybar; then
             print_success "SketchyBar started manually"
         else
             print_error "Failed to start SketchyBar manually"
@@ -449,17 +415,17 @@ validate_installation() {
     # Check if SketchyBar is installed
     if ! command -v sketchybar &> /dev/null; then
         print_error "SketchyBar command not found"
-        ((errors++))
+        errors=$((errors + 1))
     fi
     
     # Check if configuration exists
     if [[ ! -f "$CONFIG_DIR/sketchybarrc" ]]; then
         print_error "SketchyBar configuration file missing"
-        ((errors++))
+        errors=$((errors + 1))
     fi
     
     # Check if SketchyBar is running
-    if ! pgrep -f sketchybar > /dev/null; then
+    if ! pgrep -xq sketchybar; then
         print_warning "SketchyBar is not currently running"
     fi
     
@@ -521,13 +487,14 @@ display_post_install_info() {
     echo
 }
 
-# Cleanup function
+# Cleanup function — only tear down sketchybar if the install never reached
+# the verified-and-running state. Otherwise a non-zero exit from a late check
+# (e.g. validate_installation warning) would kill a perfectly working bar.
 cleanup() {
     local exit_code=$?
-    if [[ $exit_code -ne 0 ]]; then
-        print_error "Installation failed. Cleaning up..."
-        # Stop any SketchyBar processes that might be running
-        pkill -f sketchybar 2>/dev/null || true
+    if [[ $exit_code -ne 0 && $INSTALL_COMPLETE -eq 0 ]]; then
+        print_error "Installation failed before completion. Cleaning up..."
+        pkill -x sketchybar 2>/dev/null || true
         brew services stop sketchybar 2>/dev/null || true
     fi
 }
@@ -544,11 +511,10 @@ main() {
     echo -e "${BLUE}╚══════════════════════════════════════════════════════════════╝${NC}"
     echo
     
-    # Pre-installation checks
+    # Pre-installation checks (Homebrew installs Xcode CLT itself when needed)
     check_macos
     check_homebrew
-    check_xcode_tools
-    
+
     # Confirm installation
     print_step "This script will install and configure SketchyBar with custom settings"
     print_warning "This will modify your system and install packages via Homebrew"
@@ -577,9 +543,12 @@ main() {
     check_youtube_music
     
     if validate_installation; then
-        # Display completion message
+        INSTALL_COMPLETE=1
         display_post_install_info
     else
+        # Post-install validation only emits warnings. Bar is already running;
+        # mark complete so cleanup() doesn't tear it down on the way out.
+        INSTALL_COMPLETE=1
         print_error "Installation completed with warnings. Please check the issues above."
         exit 1
     fi

@@ -212,7 +212,7 @@ start_aerospace() {
     local tries=0
     until pgrep -xq AeroSpace || [[ $tries -ge 10 ]]; do
         sleep 1
-        ((tries++))
+        tries=$((tries + 1))
     done
 
     if ! pgrep -xq AeroSpace; then
@@ -269,7 +269,7 @@ verify_runtime() {
             print_success "$cli on PATH ($(command -v $cli))"
         else
             print_error "$cli not found on PATH"
-            ((failed++))
+            failed=$((failed + 1))
         fi
     done
 
@@ -279,7 +279,7 @@ verify_runtime() {
             print_success "sketchybar process running"
         else
             print_error "sketchybar is NOT running"
-            ((failed++))
+            failed=$((failed + 1))
         fi
     fi
 
@@ -289,7 +289,7 @@ verify_runtime() {
             print_success "AeroSpace process running"
         else
             print_error "AeroSpace is NOT running"
-            ((failed++))
+            failed=$((failed + 1))
         fi
     fi
 
